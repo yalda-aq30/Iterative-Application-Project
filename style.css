@@ -1,0 +1,16 @@
+/*The big box that contains the entire page*/
+
+.card {
+  width: 1400px;
+  min-height: 800px;
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 60px;
+  overflow: hidden;
+}
+
+.card h1 {
+
+
+
+}
