@@ -4,8 +4,8 @@
 }
 body {
   margin: 0;
-  font-family: Arial, sans-serif;;
-  
+  font-family: Arial, sans-serif;
+}
 
 .card {
   width: 1400px;
@@ -170,3 +170,24 @@ td {
   line-height: 1.5;
   }
   End of Search Result part */
+
+/* Header */
+.page-header {
+    background-color: #c1d9fa;
+    text-align: center;
+    padding: 38px 20px 52px;
+    border-radius: 25px;
+}
+
+.page-header h1 {
+    font-size: 36px;
+    font-weight: bold;
+    margin: 0 0 2px;
+    color: #000;
+}
+
+.page-header p {
+    font-size: 23px;
+    margin: 0;
+    color: #000;
+}
