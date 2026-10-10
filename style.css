@@ -1,4 +1,11 @@
 /*The big box that contains the entire page*/
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;;
+  
 
 .card {
   width: 1400px;
@@ -13,4 +20,47 @@
 
 
 
+}
+
+/* Search Result */
+.result {
+  margin-top: 14px;
+}
+
+.result h2 {
+  font-size: 17px;
+  margin-left: 18px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 15px;
+  background-color: #e8f5fb;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.25);
+}
+
+thead {
+  background-color: #c1d9fa;
+}
+
+th {
+  height: 42px;
+  font-size: 13px;
+  text-align: center;
+}
+
+td {
+  height: 45px;
+  padding: 0 15px;
+  font-size: 12px;
+  border-bottom: 1px solid #ffffff;
+  text-align: center;
+}
+
+.table-arrow {
+  font-size: 20px;
+  width: 40px;
+  padding-right: 50px;
 }
