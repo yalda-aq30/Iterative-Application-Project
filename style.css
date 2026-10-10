@@ -64,3 +64,36 @@ td {
   width: 40px;
   padding-right: 50px;
 }
+
+/*
+table {
+  background-color: #e8f5fb;
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.25);
+  }
+
+td {
+  height: 45px;
+  padding 0 15px;
+  text-align: center;
+  }
+
+.empty-title {
+  font-weight: bold;
+  font-size: 16px;
+  margin: 0 0 10px 0;
+  padding: 20px 0 0 0;
+  color: #000000;
+  }
+
+  .empty-description {
+  margin: 0;
+  padding: 0 0 30px 0;
+  font-size: 13px;
+  color: 8a9ba8;
+  line-height: 1.5;
+  }
+  End of Search Result part */
