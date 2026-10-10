@@ -6,20 +6,60 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
 }
-
-.card {
-  width: 1400px;
-  min-height: 800px;
-  background: #fff;
-  border: 2px solid #000;
-  border-radius: 60px;
-  overflow: hidden;
+.content{
+  display: flex;
+  gap: 24px;
+  padding: 30px;
+  align-items: flex-start;
 }
 
-.card h1 {
+/*The Big Left Box Inside the Card box*/
+.left-panel {
+  width: 1500px;  
+  min-height: 410px;
+  background-color: #e8f5fb;
+  border: 1px solid #d5e0e5;
+  border-radius: 30px;
+  padding: 25px 10px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+}
 
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.rounded-box {
+  width: 100%;
+  padding: 12px 10px;
+  background-color: #d9d9d9;
+  border-radius: 12px;
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.25);
 
+}
+.search-companies {
+  background-color: #0b5cb5;
+  color: #fff;
+}
 
+.clear-filter {
+  background-color: #d9d9d9;
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.25);
+}
+.row{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+}
+.side-box {
+  border: 2px solid #000;
+  border-radius: 20px;
+  height: 70px;
+}
+.btn {
+  width: auto;
+  cursor: pointer;
 }
 
 /* Search Result */
