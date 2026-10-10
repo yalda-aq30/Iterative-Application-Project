@@ -89,7 +89,7 @@ td {
 }
 
 .clock-icon {
-    font-size: 17px;
+    font-size: 20px;
 }
 
 .recent-card {
@@ -113,10 +113,22 @@ td {
 .recent-details {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    gap: 5px;
+    font-size: 15px;
+    color: #000;
+    white-space: nowrap;
+}
+
+
+.recent-details2 {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
     gap: 5px;
     font-size: 12px;
     color: #000;
+    white-space: nowrap;
 }
 
 .recent-details .clock-icon {
@@ -134,6 +146,7 @@ td {
 
 .recent-arrow {
     font-size: 27px;
+    margin-top: 15px;
     line-height: 1;
     color: #222;
 }
