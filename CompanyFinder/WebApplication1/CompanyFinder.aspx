@@ -11,7 +11,7 @@
 
     // Max Results
     string maxInput = Request.Form["results"];
-    if (maxInput == null || maxInput == "")
+    if (maxInput == "")
     {
         maxInput = "10";
     }
