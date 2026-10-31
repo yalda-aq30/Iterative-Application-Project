@@ -48,7 +48,7 @@
 
     <div class ="field">
         <label for = "end"><strong> Business Line</strong></label>
-        <input id="end" class="rounded-box" placeholder="Select Businesss Line(e.g. IT Services)">
+        <input id="businessLine" name="businessLine" class="rounded-box" placeholder="Select Businesss Line(e.g. IT Services)">
     </div>
 </div>
 
