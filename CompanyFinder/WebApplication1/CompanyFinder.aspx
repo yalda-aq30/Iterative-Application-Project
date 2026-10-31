@@ -90,7 +90,7 @@
 
     <div class="field">
         <label for="results"><strong>Max Results</strong></label>
-        <input id="results" name ="results" class="rounded-box" min="1" max="10" type="number" value="<% maxResults %>">
+        <input id="results" name ="results" class="rounded-box" min="1" max="10" type="number" value="<%= maxResults %>">
     </div>
 
 </div>
