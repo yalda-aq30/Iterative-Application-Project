@@ -8,6 +8,28 @@
     string[] addresses = { "Mukkulankatu 15210", "Kauppakatu 15220 Lahti", "Lahdenkatu 15230 Lahti" };
     string[] dates = { "2026-10-29", "2026-10-28", "2026-10-27" };
     string start = Request.Form["start"];
+
+    // Max Results
+    string maxInput = Request.Form["results"];
+    if (maxInput == null || maxInput == "")
+    {
+        maxInput = "10";
+    }
+    int maxResults;
+
+    if (!int.TryParse(maxInput, out maxResults))
+    {
+        maxResults = 10;
+    }
+    else if (maxResults < 1)
+    {
+        maxResults = 1;
+    }
+    else if (maxResults > 10)
+    {
+        maxResults = 10;
+    }
+
 %>
 
 
@@ -68,7 +90,7 @@
 
     <div class="field">
         <label for="results"><strong>Max Results</strong></label>
-        <input id="results" class="rounded-box" type="number" value="10">
+        <input id="results" name ="results" class="rounded-box" min="1" max="10" type="number" value="<% maxResults %>">
     </div>
 
 </div>
