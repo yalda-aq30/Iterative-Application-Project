@@ -198,13 +198,14 @@
             <thead>
             <tr>
                 <%
+                    int count = 0;
                     if (Request.Form.Count > 0)
                     {
                         for (int i = 0; i < names.Length; i++)
                         {
                             bool endMatch =
-    string.IsNullOrWhiteSpace(end) ||
-    Convert.ToDateTime(dates[i]) <= Convert.ToDateTime(end);
+                            string.IsNullOrWhiteSpace(end) ||
+                            Convert.ToDateTime(dates[i]) <= Convert.ToDateTime(end);
                             if (dates[i] == start && endMatch)
                             {
                                 Response.Write("<tr>");
@@ -213,7 +214,18 @@
                                 Response.Write("<td>" + addresses[i] + "</td>");
                                 Response.Write("<td class=\"table.arrow\"> &rsaquo; </td>");
                                 Response.Write("</tr>");
+                                count++;
                             }
+
+                        } //validation logic in here :D
+                        if (!string.IsNullOrWhiteSpace(start) && !string.IsNullOrWhiteSpace(end)
+                            && string.Compare(start, end) > 0)
+                        {
+                            Response.Write("<tr><td colspan='4'>Start date cannot be later than end date.</td></tr>");
+                        }
+                        else if (count == 0)
+                        {
+                            Response.Write("<tr><td colspan='4'>No companies found.</td></tr>");
                         }
                         Response.Write("For demo purposes, pick a date between 27th, 28th or 29th of October 2026 (aka 27.10.2026, 28.10.2026 or 29.10.2026)");
                     }
