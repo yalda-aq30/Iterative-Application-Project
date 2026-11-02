@@ -7,6 +7,15 @@
     string[] names = { "AnttiOy", "IsoPasi", "Group3" };
     string[] addresses = { "Mukkulankatu 15210", "Kauppakatu 15220 Lahti", "Lahdenkatu 15230 Lahti" };
     string[] dates = { "2026-10-29", "2026-10-28", "2026-10-27" };
+    
+    // Business Line
+    string[] businessLines = {
+    "IT Services",
+    "Manufacturing",
+    "IT Services"
+    };
+    string businessLine = Request.Form["businessLine"] ?? "";
+
     string start = Request.Form["start"];
     string end = Request.Form["end"];
     // Max Results
@@ -194,6 +203,12 @@
             </tbody>                    
          </table>  
         -->
+<<<<<<< HEAD
+        
+
+
+         
+=======
         <table>
             <thead>
             <tr>
@@ -232,6 +247,7 @@
                 %>
             </tbody>                    
          </table>  
+>>>>>>> 10dc2b609fc8ff734f58e91fed5786e71d50c7e7
 
         <!-- In Case: No Search performed 
         <table>
