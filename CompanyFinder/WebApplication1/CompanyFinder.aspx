@@ -17,7 +17,7 @@
     string businessLine = Request.Form["businessLine"] ?? "";
 
     string start = Request.Form["start"];
-
+    string end = Request.Form["end"];
     // Max Results
     string maxInput = Request.Form["results"];
     if (maxInput == "")
@@ -94,7 +94,7 @@
 
     <div class="field">
         <label for="end"> <strong>Registration End Date</strong></label>
-        <input id="end" class="rounded-box" placeholder="dd.mm.yyyy" type="date"> 
+        <input id="end" name="end" class="rounded-box" placeholder="dd.mm.yyyy" type="date" value="<%= end %>"> 
     </div>
 
     <div class="field">
@@ -203,10 +203,51 @@
             </tbody>                    
          </table>  
         -->
+<<<<<<< HEAD
         
 
 
          
+=======
+        <table>
+            <thead>
+            <tr>
+                <%
+                    int count = 0;
+                    if (Request.Form.Count > 0)
+                    {
+                        for (int i = 0; i < names.Length; i++)
+                        {
+                            bool endMatch =
+                            string.IsNullOrWhiteSpace(end) ||
+                            Convert.ToDateTime(dates[i]) <= Convert.ToDateTime(end);
+                            if (dates[i] == start && endMatch)
+                            {
+                                Response.Write("<tr>");
+                                Response.Write("<td>" + ids[i] + "</td>");
+                                Response.Write("<td>" + names[i] + "</td>");
+                                Response.Write("<td>" + addresses[i] + "</td>");
+                                Response.Write("<td class=\"table.arrow\"> &rsaquo; </td>");
+                                Response.Write("</tr>");
+                                count++;
+                            }
+
+                        } //validation logic in here :D
+                        if (!string.IsNullOrWhiteSpace(start) && !string.IsNullOrWhiteSpace(end)
+                            && string.Compare(start, end) > 0)
+                        {
+                            Response.Write("<tr><td colspan='4'>Start date cannot be later than end date.</td></tr>");
+                        }
+                        else if (count == 0)
+                        {
+                            Response.Write("<tr><td colspan='4'>No companies found.</td></tr>");
+                        }
+                        Response.Write("For demo purposes, pick a date between 27th, 28th or 29th of October 2026 (aka 27.10.2026, 28.10.2026 or 29.10.2026)");
+                    }
+                %>
+            </tbody>                    
+         </table>  
+>>>>>>> 10dc2b609fc8ff734f58e91fed5786e71d50c7e7
 
         <!-- In Case: No Search performed 
         <table>
