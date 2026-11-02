@@ -8,7 +8,7 @@
     string[] addresses = { "Mukkulankatu 15210", "Kauppakatu 15220 Lahti", "Lahdenkatu 15230 Lahti" };
     string[] dates = { "2026-10-29", "2026-10-28", "2026-10-27" };
     string start = Request.Form["start"];
-
+    string end = Request.Form["end"];
     // Max Results
     string maxInput = Request.Form["results"];
     if (maxInput == "")
@@ -85,7 +85,7 @@
 
     <div class="field">
         <label for="end"> <strong>Registration End Date</strong></label>
-        <input id="end" class="rounded-box" placeholder="dd.mm.yyyy" type="date"> 
+        <input id="end" name="end" class="rounded-box" placeholder="dd.mm.yyyy" type="date" value="<%= end %>"> 
     </div>
 
     <div class="field">
@@ -202,7 +202,10 @@
                     {
                         for (int i = 0; i < names.Length; i++)
                         {
-                            if (dates[i] == start)
+                            bool endMatch =
+    string.IsNullOrWhiteSpace(end) ||
+    Convert.ToDateTime(dates[i]) <= Convert.ToDateTime(end);
+                            if (dates[i] == start && endMatch)
                             {
                                 Response.Write("<tr>");
                                 Response.Write("<td>" + ids[i] + "</td>");
