@@ -52,6 +52,7 @@ namespace WebApplication1
                 };
 
             string start = Request.Form["start"];
+            string city = Request.Form["city"];
 
 
             string[] businessLines = { 
@@ -83,7 +84,10 @@ namespace WebApplication1
                         string.IsNullOrWhiteSpace(start) ||
                         dates[i] == start;
 
-                    if (businessLineMatch && dateMatch)
+                    bool cityMatch = string.IsNullOrWhiteSpace(city) ||
+                    addresses[i].IndexOf(city, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    if (businessLineMatch && dateMatch && cityMatch)
                     {
                         System.Diagnostics.Debug.WriteLine(
                             ids[i] + " - " +

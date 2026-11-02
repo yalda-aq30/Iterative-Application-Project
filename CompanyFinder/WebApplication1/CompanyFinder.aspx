@@ -8,6 +8,7 @@
     string[] addresses = { "Mukkulankatu 15210", "Kauppakatu 15220 Lahti", "Lahdenkatu 15230 Lahti" };
     string[] dates = { "2026-10-29", "2026-10-28", "2026-10-27" };
     string start = Request.Form["start"];
+    string city = Request.Form["city"];
 
     // Max Results
     string maxInput = Request.Form["results"];
@@ -61,9 +62,9 @@
  <!--first row-->
 <div class="row first-row">  
 
-    <div class ="field">
-        <label for = "end"><strong> City</strong></label>
-        <input id="end" class="rounded-box" placeholder="Select city (e.g. Helsinki, Lahti...)">
+    <div class="field">
+        <label for="city"><strong>City</strong></label>
+        <input id="city" name="city" class="rounded-box" placeholder="Select city (e.g. Helsinki, Lahti...)">
         <p>Please select a city</p>
     </div>
 
@@ -195,14 +196,15 @@
          </table>  
         -->
         <table>
-            <thead>
-            <tr>
+            <tbody>
                 <%
                     if (Request.Form.Count > 0)
                     {
                         for (int i = 0; i < names.Length; i++)
                         {
-                            if (dates[i] == start)
+                            if ((string.IsNullOrWhiteSpace(start) || dates[i] == start) &&
+                                (string.IsNullOrWhiteSpace(city) ||
+                                addresses[i].IndexOf(city, StringComparison.OrdinalIgnoreCase) >= 0))
                             {
                                 Response.Write("<tr>");
                                 Response.Write("<td>" + ids[i] + "</td>");
