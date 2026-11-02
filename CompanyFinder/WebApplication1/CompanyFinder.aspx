@@ -7,6 +7,15 @@
     string[] names = { "AnttiOy", "IsoPasi", "Group3" };
     string[] addresses = { "Mukkulankatu 15210", "Kauppakatu 15220 Lahti", "Lahdenkatu 15230 Lahti" };
     string[] dates = { "2026-10-29", "2026-10-28", "2026-10-27" };
+    
+    // Business Line
+    string[] businessLines = {
+    "IT Services",
+    "Manufacturing",
+    "IT Services"
+    };
+    string businessLine = Request.Form["businessLine"] ?? "";
+
     string start = Request.Form["start"];
 
     // Max Results
@@ -194,29 +203,10 @@
             </tbody>                    
          </table>  
         -->
-        <table>
-            <thead>
-            <tr>
-                <%
-                    if (Request.Form.Count > 0)
-                    {
-                        for (int i = 0; i < names.Length; i++)
-                        {
-                            if (dates[i] == start)
-                            {
-                                Response.Write("<tr>");
-                                Response.Write("<td>" + ids[i] + "</td>");
-                                Response.Write("<td>" + names[i] + "</td>");
-                                Response.Write("<td>" + addresses[i] + "</td>");
-                                Response.Write("<td class=\"table.arrow\"> &rsaquo; </td>");
-                                Response.Write("</tr>");
-                            }
-                        }
-                        Response.Write("For demo purposes, pick a date between 27th, 28th or 29th of October 2026 (aka 27.10.2026, 28.10.2026 or 29.10.2026)");
-                    }
-                %>
-            </tbody>                    
-         </table>  
+        
+
+
+         
 
         <!-- In Case: No Search performed 
         <table>
