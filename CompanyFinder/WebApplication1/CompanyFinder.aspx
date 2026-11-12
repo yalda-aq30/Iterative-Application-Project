@@ -1,4 +1,7 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="CompanyFinder.aspx.cs" Inherits="WebApplication1.CompanyFinder" %>
+<%@ Import Namespace="System" %>
+<%@ Import Namespace="System.Net" %>
+<%@ Import Namespace="System.IO" %>
 
 <!DOCTYPE html>
 <%
@@ -8,8 +11,15 @@
     string[] addresses = { "Mukkulankatu 15210", "Kauppakatu 15220 Lahti", "Lahdenkatu 15230 Lahti" };
     string[] dates = { "2026-10-29", "2026-10-28", "2026-10-27" };
     string start = Request.Form["start"];
+
+
+    // City after parsing
     string city = Request.Form["city"];
-    
+    if (city == null)
+    {
+        city = "";
+    }
+
     // Business Line
     string[] businessLines = {
     "IT Services",
@@ -73,8 +83,31 @@
 
     <div class="field">
         <label for="city"><strong>City</strong></label>
-        <input id="city" name="city" class="rounded-box" placeholder="Select city (e.g. Helsinki, Lahti...)">
-        <p>Please select a city</p>
+        <select id="city" name="city" class="rounded-box">
+
+    <option value="">Select a city</option>
+
+    <option value="Helsinki" <%= city == "Helsinki" ? "selected='selected'" : "" %>>Helsinki</option>
+
+    <option value="Lahti" <%= city == "Lahti" ? "selected='selected'" : "" %>>Lahti</option>
+
+    <option value="Espoo" <%= city == "Espoo" ? "selected='selected'" : "" %>>Espoo</option>
+
+    <option value="Tampere" <%= city == "Tampere" ? "selected='selected'" : "" %>>Tampere</option>
+
+    <option value="Turku" <%= city == "Turku" ? "selected='selected'" : "" %>>Turku</option>
+
+    <option value="Oulu" <%= city == "Oulu" ? "selected='selected'" : "" %>>Oulu</option>
+
+    <option value="Vantaa" <%= city == "Vantaa" ? "selected='selected'" : "" %>>Vantaa</option>
+
+    <option value="Jyväskylä" <%= city == "Jyväskylä" ? "selected='selected'" : "" %>>Jyväskylä</option>
+
+    <option value="Kuopio" <%= city == "Kuopio" ? "selected='selected'" : "" %>>Kuopio</option>
+
+    <option value="Rovaniemi" <%= city == "Rovaniemi" ? "selected='selected'" : "" %>>Rovaniemi</option>
+
+</select>
     </div>
 
 
@@ -169,8 +202,9 @@
         
     <!-- Search Result -->
     <section class="result"> 
-        <h2> Search Results </h2><table>
-            <!--
+        <h2> Search Results </h2>
+<table>
+            
             <thead>
             <tr>
                 <th> Business ID </th>
@@ -179,39 +213,48 @@
                 <th></th>
             </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td> 3449123 - 5 </td>
-                    <td> TahkoLuxuryVillas Oy </td>
-                    <td> Mukkulankatu 15210 </td>
-                    <td class="table.arrow"> › </td>
-                </tr>
-
-                <tr>
-                    <td> 3449147 - 2 </td>
-                    <td> Sporttiolo Oy </td>
-                    <td> Kauppakatu 15220 Lahti </td>
-                    <td class="table.arrow"> › </td>
-                </tr>
-
-                <tr>
-                    <td> 3449250 - 7 </td>
-                    <td> Tiimihenki Oy </td>
-                    <td> Lahdenkatu 15230 Lahti </td>
-                    <td class="table.arrow"> › </td>
-                </tr>
-                
-            </tbody>                    
-         </table>  
-        -->
-
+   
         
-
-
-         
-        <table>
             <tbody>
-                <%
+                <%  
+                        // City after parsing
+                    if (Request.HttpMethod == "POST" )
+                    {
+                        // Create the PRH API URL
+                        string url = "https://avoindata.prh.fi/opendata-ytj-api/v3/companies";
+
+                        bool hasParameter = false;
+
+                        if (city != "")
+                        {
+                            url = url + "?location=" + Server.UrlEncode(city);
+                            hasParameter = true;
+                        }
+
+                        // Get data from PRH
+                        WebRequest myRequest = WebRequest.Create(url);
+                        WebResponse myResponse = myRequest.GetResponse();
+
+                        Stream dataStream = myResponse.GetResponseStream();
+                        StreamReader reader = new StreamReader(dataStream);
+
+                        string responseFromServer = reader.ReadToEnd();
+
+                        reader.Close();
+                        myResponse.Close();
+
+                        
+                    }
+                    else if (Request.HttpMethod != "POST")
+                    {
+                        Response.Write("<tr>");
+                        Response.Write("<td colspan='4'>Enter your search criteria above to find Finnish registered companies.</td>");
+                        Response.Write("</tr>");
+                    }
+                    
+
+
+
                     int count = 0;
                     if (Request.Form.Count > 0)
                     {
@@ -256,18 +299,7 @@ if (cityMatch && startMatch && endMatch)
             </tbody>                    
          </table>  
 
-        <!-- In Case: No Search performed 
-        <table>
-            <tr>
-                <td class="empty-title>"> No Search performed yet! </td>
-            </tr>
-
-            <tr>
-                <td class="empty-description"> Enter your search criteria above to find Finnish registered companies. 
-                    You can filtered by city, industry, and registration date. </td>
-            </tr>
-        </table>
-        -->
+        
 
         
      </section>   
