@@ -29,6 +29,10 @@
     string businessLine = Request.Form["businessLine"] ?? "";
 
     string end = Request.Form["end"];
+        if (end == null)
+    {
+        end = "";
+    }
     // Max Results
     string maxInput = Request.Form["results"];
     if (maxInput == "")
@@ -230,7 +234,18 @@
                             url = url + "?location=" + Server.UrlEncode(city);
                             hasParameter = true;
                         }
-
+                        if (end != "")
+{
+    if (hasParameter)
+    {
+        url = url + "&registrationDateEnd=" + Server.UrlEncode(end);
+    }
+    else
+    {
+        url = url + "?registrationDateEnd=" + Server.UrlEncode(end);
+        hasParameter = true;
+    }
+}
                         // Get data from PRH
                         WebRequest myRequest = WebRequest.Create(url);
                         WebResponse myResponse = myRequest.GetResponse();
