@@ -2,14 +2,11 @@
 <%@ Import Namespace="System" %>
 <%@ Import Namespace="System.Net" %>
 <%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="WebApplication1" %>
 
 <!DOCTYPE html>
 <%
-    //Fun Fake Data yay :D
-    string[] ids = { "3449123-5", "3449147-2", "3449250-7" };
-    string[] names = { "AnttiOy", "IsoPasi", "Group3" };
-    string[] addresses = { "Mukkulankatu 15210", "Kauppakatu 15220 Lahti", "Lahdenkatu 15230 Lahti" };
-    string[] dates = { "2026-10-29", "2026-10-28", "2026-10-27" };
     string start = Request.Form["start"];
     if (start == null)
     {
@@ -38,9 +35,6 @@
         { "56101", "Restaurants" },
         { "43210", "Electrical installation" }
     };
-
-    // Fake data: one industry code per company (same order as ids/names/addresses)
-    string[] businessLines = { "62100", "25620", "62200" };
 
     string businessLine = Request.Form["businessLine"] ?? "";
 
@@ -241,9 +235,18 @@
    
         
             <tbody>
-                <%  
-                        // City after parsing
-                    if (Request.HttpMethod == "POST" )
+                <%
+                    if (Request.HttpMethod != "POST")
+                    {
+                        Response.Write("<tr>");
+                        Response.Write("<td colspan='4'>Enter your search criteria above to find Finnish registered companies.</td>");
+                        Response.Write("</tr>");
+                    }
+                    else if (start != "" && end != "" && string.Compare(start, end) > 0)
+                    {
+                        Response.Write("<tr><td colspan='4'>Start date cannot be later than end date.</td></tr>");
+                    }
+                    else
                     {
                         // Create the PRH API URL
                         string url = "https://avoindata.prh.fi/opendata-ytj-api/v3/companies";
@@ -255,18 +258,19 @@
                             url = url + "?location=" + Server.UrlEncode(city);
                             hasParameter = true;
                         }
+
                         if (end != "")
-{
-    if (hasParameter)
-    {
-        url = url + "&registrationDateEnd=" + Server.UrlEncode(end);
-    }
-    else
-    {
-        url = url + "?registrationDateEnd=" + Server.UrlEncode(end);
-        hasParameter = true;
-    }
-}
+                        {
+                            if (hasParameter)
+                            {
+                                url = url + "&registrationDateEnd=" + Server.UrlEncode(end);
+                            }
+                            else
+                            {
+                                url = url + "?registrationDateEnd=" + Server.UrlEncode(end);
+                                hasParameter = true;
+                            }
+                        }
 
                         if (start != "")
                         {
@@ -294,72 +298,47 @@
                             }
                         }
                         // Get data from PRH
-                        WebRequest myRequest = WebRequest.Create(url);
-                        WebResponse myResponse = myRequest.GetResponse();
-
-                        Stream dataStream = myResponse.GetResponseStream();
-                        StreamReader reader = new StreamReader(dataStream);
-
-                        string responseFromServer = reader.ReadToEnd();
-
-                        reader.Close();
-                        myResponse.Close();
-
-                        
-                    }
-                    else if (Request.HttpMethod != "POST")
-                    {
-                        Response.Write("<tr>");
-                        Response.Write("<td colspan='4'>Enter your search criteria above to find Finnish registered companies.</td>");
-                        Response.Write("</tr>");
-                    }
-                    
-
-
-
-                    int count = 0;
-                    if (Request.Form.Count > 0)
-                    {
-                        for (int i = 0; i < names.Length; i++)
+                        string responseFromServer = "";
+                        bool requestFailed = false;
+                        try
                         {
-bool cityMatch =
-    string.IsNullOrWhiteSpace(city) ||
-    addresses[i].IndexOf(city, StringComparison.OrdinalIgnoreCase) >= 0;
+                            WebRequest myRequest = WebRequest.Create(url);
+                            WebResponse myResponse = myRequest.GetResponse();
 
-bool startMatch =
-    string.IsNullOrWhiteSpace(start) ||
-    dates[i] == start;
+                            Stream dataStream = myResponse.GetResponseStream();
+                            StreamReader reader = new StreamReader(dataStream);
 
-bool endMatch =
-    string.IsNullOrWhiteSpace(end) ||
-    Convert.ToDateTime(dates[i]) <= Convert.ToDateTime(end);
+                            responseFromServer = reader.ReadToEnd();
 
-bool businessLineMatch =
-    string.IsNullOrWhiteSpace(businessLine) ||
-    businessLines[i] == businessLine;
-
-if (cityMatch && startMatch && endMatch && businessLineMatch)
-                            {
-                                Response.Write("<tr>");
-                                Response.Write("<td>" + ids[i] + "</td>");
-                                Response.Write("<td>" + names[i] + "</td>");
-                                Response.Write("<td>" + addresses[i] + "</td>");
-                                Response.Write("<td class=\"table.arrow\"> &rsaquo; </td>");
-                                Response.Write("</tr>");
-                                count++;
-                            }
-
-                        } //validation logic in here :D
-                        if (!string.IsNullOrWhiteSpace(start) && !string.IsNullOrWhiteSpace(end)
-                            && string.Compare(start, end) > 0)
-                        {
-                            Response.Write("<tr><td colspan='4'>Start date cannot be later than end date.</td></tr>");
+                            reader.Close();
+                            myResponse.Close();
                         }
-                        else if (count == 0)
+                        catch (WebException)
+                        {
+                            requestFailed = true;
+                        }
+
+                        // Parse the response (the parsing code is in ResponseParser.cs)
+                        List<Company> companies = ResponseParser.ParseCompanies(responseFromServer, maxResults);
+
+                        foreach (Company company in companies)
+                        {
+                            Response.Write("<tr>");
+                            Response.Write("<td>" + Server.HtmlEncode(company.BusinessId) + "</td>");
+                            Response.Write("<td>" + Server.HtmlEncode(company.Name) + "</td>");
+                            Response.Write("<td>" + Server.HtmlEncode(company.Address) + "</td>");
+                            Response.Write("<td class=\"table.arrow\"> &rsaquo; </td>");
+                            Response.Write("</tr>");
+                        }
+
+                        if (requestFailed)
+                        {
+                            Response.Write("<tr><td colspan='4'>Could not get data from PRH. Please try again later.</td></tr>");
+                        }
+                        else if (companies.Count == 0)
                         {
                             Response.Write("<tr><td colspan='4'>No companies found.</td></tr>");
                         }
-                        Response.Write("For demo purposes, pick a date between 27th, 28th or 29th of October 2026 (aka 27.10.2026, 28.10.2026 or 29.10.2026)");
                     }
                 %>
             </tbody>                    
