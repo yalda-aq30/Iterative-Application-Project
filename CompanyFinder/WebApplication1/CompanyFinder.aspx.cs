@@ -57,13 +57,13 @@ namespace WebApplication1
 
             string[] businessLines = { 
                 "IT Services",
-                 "Manufacturing",
-                 "IT Services",
-                  "Textile", 
-                  "Agriculture",
-                   "Facility services", 
-                   "Faschion"
-                   };
+                "Manufacturing",
+                "IT Services",
+                "Textile", 
+                "Agriculture",
+                "Facility services", 
+                "Faschion"
+                };
 
                    
             string businessLine = Request.Form["businessLine"];
