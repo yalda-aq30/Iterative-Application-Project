@@ -24,12 +24,24 @@
         city = "";
     }
 
-    // Business Line
-    string[] businessLines = {
-    "IT Services",
-    "Manufacturing",
-    "IT Services"
+    // Business Line: value = full 5-digit TOL industry code (what the PRH API filters on)
+    string[,] businessLineOptions = {
+        { "62100", "Software development" },
+        { "62200", "IT consulting" },
+        { "25620", "Machining (manufacturing)" },
+        { "16239", "Carpentry & joinery (manufacturing)" },
+        { "13920", "Household textiles" },
+        { "14290", "Clothing manufacturing" },
+        { "01110", "Cereal farming" },
+        { "81100", "Facility services" },
+        { "81210", "Building cleaning" },
+        { "56101", "Restaurants" },
+        { "43210", "Electrical installation" }
     };
+
+    // Fake data: one industry code per company (same order as ids/names/addresses)
+    string[] businessLines = { "62100", "25620", "62200" };
+
     string businessLine = Request.Form["businessLine"] ?? "";
 
     string end = Request.Form["end"];
@@ -119,9 +131,14 @@
     </div>
 
 
-    <div class ="field">
-        <label for = "end"><strong> Business Line</strong></label>
-        <input id="businessLine" name="businessLine" class="rounded-box" placeholder="Select Businesss Line(e.g. IT Services)">
+    <div class="field">
+        <label for="businessLine"><strong>Business Line</strong></label>
+        <select id="businessLine" name="businessLine" class="rounded-box">
+            <option value="">Select a business line</option>
+            <% for (int b = 0; b < businessLineOptions.GetLength(0); b++) { %>
+            <option value="<%= businessLineOptions[b, 0] %>" <%= businessLine == businessLineOptions[b, 0] ? "selected='selected'" : "" %>><%= businessLineOptions[b, 1] %></option>
+            <% } %>
+        </select>
     </div>
 </div>
 
@@ -263,6 +280,19 @@
                                 hasParameter = true;
                             }
                         }
+
+                        if (businessLine != "")
+                        {
+                            if (hasParameter)
+                            {
+                                url = url + "&mainBusinessLine=" + Server.UrlEncode(businessLine);
+                            }
+                            else
+                            {
+                                url = url + "?mainBusinessLine=" + Server.UrlEncode(businessLine);
+                                hasParameter = true;
+                            }
+                        }
                         // Get data from PRH
                         WebRequest myRequest = WebRequest.Create(url);
                         WebResponse myResponse = myRequest.GetResponse();
@@ -304,7 +334,11 @@ bool endMatch =
     string.IsNullOrWhiteSpace(end) ||
     Convert.ToDateTime(dates[i]) <= Convert.ToDateTime(end);
 
-if (cityMatch && startMatch && endMatch)
+bool businessLineMatch =
+    string.IsNullOrWhiteSpace(businessLine) ||
+    businessLines[i] == businessLine;
+
+if (cityMatch && startMatch && endMatch && businessLineMatch)
                             {
                                 Response.Write("<tr>");
                                 Response.Write("<td>" + ids[i] + "</td>");
