@@ -97,31 +97,9 @@
 
     <div class="field">
         <label for="city"><strong>City</strong></label>
-        <select id="city" name="city" class="rounded-box">
-
-    <option value="">Select a city</option>
-
-    <option value="Helsinki" <%= city == "Helsinki" ? "selected='selected'" : "" %>>Helsinki</option>
-
-    <option value="Lahti" <%= city == "Lahti" ? "selected='selected'" : "" %>>Lahti</option>
-
-    <option value="Espoo" <%= city == "Espoo" ? "selected='selected'" : "" %>>Espoo</option>
-
-    <option value="Tampere" <%= city == "Tampere" ? "selected='selected'" : "" %>>Tampere</option>
-
-    <option value="Turku" <%= city == "Turku" ? "selected='selected'" : "" %>>Turku</option>
-
-    <option value="Oulu" <%= city == "Oulu" ? "selected='selected'" : "" %>>Oulu</option>
-
-    <option value="Vantaa" <%= city == "Vantaa" ? "selected='selected'" : "" %>>Vantaa</option>
-
-    <option value="Jyväskylä" <%= city == "Jyväskylä" ? "selected='selected'" : "" %>>Jyväskylä</option>
-
-    <option value="Kuopio" <%= city == "Kuopio" ? "selected='selected'" : "" %>>Kuopio</option>
-
-    <option value="Rovaniemi" <%= city == "Rovaniemi" ? "selected='selected'" : "" %>>Rovaniemi</option>
-
-</select>
+        <input id="city" name="city" class="rounded-box" placeholder ="Please write a city" city="<%= city %>" />
+    
+</input>
     </div>
 
 
