@@ -20,6 +20,7 @@
     {
         city = "";
     }
+ city = city.Trim();
 
     // Business Line: value = full 5-digit TOL industry code (what the PRH API filters on)
     string[,] businessLineOptions = {
@@ -36,7 +37,27 @@
         { "43210", "Electrical installation" }
     };
 
-    string businessLine = Request.Form["businessLine"] ?? "";
+    string businessLine = Request.Form["businessLine"];
+
+if (businessLine == null)
+{
+    businessLine = "";
+}
+businessLine = businessLine.Trim();
+string businessLineCode = "";
+
+for (int b = 0; b < businessLineOptions.GetLength(0); b++)
+{
+    if (string.Equals(
+        businessLine,
+        businessLineOptions[b, 1],
+        StringComparison.OrdinalIgnoreCase))
+    {
+        businessLineCode = businessLineOptions[b, 0];
+    }
+}
+
+bool validBusinessLine = businessLineCode != "";
 
     string end = Request.Form["end"];
         if (end == null)
@@ -97,7 +118,7 @@
 
     <div class="field">
         <label for="city"><strong>City</strong></label>
-        <input id="city" name="city" class="rounded-box" placeholder ="Please write a city" list="citylist" value="<%= Server.HtmlEncode(city) %>" />
+        <input id="city" name="city" class="rounded-box" placeholder ="Please write a city" list="citylist" value="<%= Server.HtmlEncode(city) %>" required/>
 <datalist id="citylist">
         <option value="Helsinki"></option>
         <option value="Lahti"></option>
@@ -117,12 +138,13 @@
 
     <div class="field">
         <label for="businessLine"><strong>Business Line</strong></label>
-        <select id="businessLine" name="businessLine" class="rounded-box">
-            <option value="">Select a business line</option>
-            <% for (int b = 0; b < businessLineOptions.GetLength(0); b++) { %>
-            <option value="<%= businessLineOptions[b, 0] %>" <%= businessLine == businessLineOptions[b, 0] ? "selected='selected'" : "" %>><%= businessLineOptions[b, 1] %></option>
-            <% } %>
-        </select>
+         <input id="businessLine" name="businessLine" class="rounded-box" list="businessLineList" placeholder="Type or select a business line" value="<%= Server.HtmlEncode(businessLine) %>" required />
+
+    <datalist id="businessLineList">
+        <% for (int b = 0; b < businessLineOptions.GetLength(0); b++) { %>
+            <option value="<%= businessLineOptions[b, 1] %>"></option>
+        <% } %>
+    </datalist>
     </div>
 </div>
 
@@ -149,7 +171,7 @@
 <!-- Button row-->
     <div class="row">
         <button type="submit" class="rounded-box btn search-companies">Search Companies</button>
-        <button type ="submit" class ="rounded-box btn clear-filter">Clear Filters</button>
+        <button type ="reset" class ="rounded-box btn clear-filter">Clear Filters</button>
      </div>
 </div>
     <!-- Recent Results -->
@@ -236,6 +258,14 @@
                     {
                         Response.Write("<tr><td colspan='4'>Start date cannot be later than end date.</td></tr>");
                     }
+else if (city == "")
+{
+    Response.Write("<tr><td colspan='4'>Please select a City before searching.</td></tr>");
+}
+else if (!validBusinessLine)
+{
+    Response.Write("<tr><td colspan='4'>Please select a valid Business Line before searching.</td></tr>");
+}
                     else
                     {
                         // Create the PRH API URL
@@ -275,18 +305,17 @@
                             }
                         }
 
-                        if (businessLine != "")
-                        {
+                        
                             if (hasParameter)
                             {
-                                url = url + "&mainBusinessLine=" + Server.UrlEncode(businessLine);
+                                url = url + "&mainBusinessLine=" + Server.UrlEncode(businessLineCode);
                             }
                             else
                             {
-                                url = url + "?mainBusinessLine=" + Server.UrlEncode(businessLine);
+                                url = url + "?mainBusinessLine=" + Server.UrlEncode(businessLineCode);
                                 hasParameter = true;
                             }
-                        }
+                        
                         // Get data from PRH
                         string responseFromServer = "";
                         bool requestFailed = false;
@@ -309,26 +338,29 @@
                         }
 
                         // Parse the response (the parsing code is in ResponseParser.cs)
-                        List<Company> companies = ResponseParser.ParseCompanies(responseFromServer, maxResults);
-
-                        foreach (Company company in companies)
-                        {
-                            Response.Write("<tr>");
-                            Response.Write("<td>" + Server.HtmlEncode(company.BusinessId) + "</td>");
-                            Response.Write("<td>" + Server.HtmlEncode(company.Name) + "</td>");
-                            Response.Write("<td>" + Server.HtmlEncode(company.Address) + "</td>");
-                            Response.Write("<td class=\"table.arrow\"> &rsaquo; </td>");
-                            Response.Write("</tr>");
-                        }
-
                         if (requestFailed)
-                        {
-                            Response.Write("<tr><td colspan='4'>Could not get data from PRH. Please try again later.</td></tr>");
-                        }
-                        else if (companies.Count == 0)
-                        {
-                            Response.Write("<tr><td colspan='4'>No companies found.</td></tr>");
-                        }
+{
+    Response.Write("<tr><td colspan='4'>Could not get data from PRH. Please try again later.</td></tr>");
+}
+else
+{
+    List<Company> companies = ResponseParser.ParseCompanies(responseFromServer, maxResults);
+
+    foreach (Company company in companies)
+    {
+        Response.Write("<tr>");
+        Response.Write("<td>" + Server.HtmlEncode(company.BusinessId) + "</td>");
+        Response.Write("<td>" + Server.HtmlEncode(company.Name) + "</td>");
+        Response.Write("<td>" + Server.HtmlEncode(company.Address) + "</td>");
+        Response.Write("<td class=\"table.arrow\"> &rsaquo; </td>");
+        Response.Write("</tr>");
+    }
+
+    if (companies.Count == 0)
+    {
+        Response.Write("<tr><td colspan='4'>No companies found.</td></tr>");
+    }
+}
                     }
                 %>
             </tbody>                    
