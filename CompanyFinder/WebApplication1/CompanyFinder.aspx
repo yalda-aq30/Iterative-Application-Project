@@ -7,6 +7,12 @@
 
 <!DOCTYPE html>
 <%
+string action = Request.Form["action"];
+if (action == null)
+{
+    action = "";
+}
+
     string start = Request.Form["start"];
     if (start == null)
     {
@@ -84,6 +90,15 @@ bool validBusinessLine = businessLineCode != "";
     {
         maxResults = 10;
     }
+
+if (action == "clear")
+{
+    start = "";
+    city = "";
+    businessLine = "";
+    end = "";
+    maxResults = 10;
+}
 
 %>
 
@@ -170,8 +185,8 @@ bool validBusinessLine = businessLineCode != "";
 </div>
 <!-- Button row-->
     <div class="row">
-        <button type="submit" class="rounded-box btn search-companies">Search Companies</button>
-        <button type ="reset" class ="rounded-box btn clear-filter">Clear Filters</button>
+        <button type="submit" name="action" value="search" class="rounded-box btn search-companies">Search Companies</button>
+        <button type ="submit" name="action" value="clear" formnovalidate class ="rounded-box btn clear-filter">Clear Filters</button>
      </div>
 </div>
     <!-- Recent Results -->
@@ -248,7 +263,7 @@ bool validBusinessLine = businessLineCode != "";
         
             <tbody>
                 <%
-                    if (Request.HttpMethod != "POST")
+                    if (Request.HttpMethod != "POST" || action == "clear")
                     {
                         Response.Write("<tr>");
                         Response.Write("<td colspan='4'>Enter your search criteria above to find Finnish registered companies.</td>");
