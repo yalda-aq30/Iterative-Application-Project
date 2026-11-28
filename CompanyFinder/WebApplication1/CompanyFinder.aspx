@@ -133,21 +133,7 @@ if (action == "clear")
 
     <div class="field">
         <label for="city"><strong>City</strong></label>
-        <input id="city" name="city" class="rounded-box" placeholder ="Please write a city" list="citylist" value="<%= Server.HtmlEncode(city) %>" required/>
-<datalist id="citylist">
-        <option value="Helsinki"></option>
-        <option value="Lahti"></option>
-        <option value="Espoo"></option>
-        <option value="Tampere"></option>
-        <option value="Turku"></option>
-        <option value="Oulu"></option>
-        <option value="Vantaa"></option>
-        <option value="Jyväskylä"></option>
-        <option value="Kuopio"></option>
-        <option value="Rovaniemi"></option>
-    </datalist>
-    
-
+        <input id="city" name="city" class="rounded-box" placeholder ="Please write a city" value="<%= city %>"/>
     </div>
 
 
